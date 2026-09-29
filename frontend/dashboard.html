@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Resume Builder</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">ResumeBuilder</div>
+    <div class="nav-links">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/profile.html">Profile</a>
+      <a href="#" id="logout-btn">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="dashboard-header">
+      <h2>Welcome, <span id="user-name">User</span></h2>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Resume Completion</h3>
+        <div class="value" id="stat-completion">0%</div>
+      </div>
+      <div class="stat-card">
+        <h3>ATS Readiness</h3>
+        <div class="value" id="stat-ats">0 / 100</div>
+      </div>
+      <div class="stat-card">
+        <h3>Target Job Role</h3>
+        <div class="value" id="stat-role" style="font-size:1.25rem;">Not Set</div>
+      </div>
+      <div class="stat-card">
+        <h3>Current Template</h3>
+        <div class="value" id="stat-template" style="font-size:1.25rem;">Modern Minimal</div>
+      </div>
+    </div>
+
+    <div class="card text-center" style="padding: 4rem 2rem;">
+      <h3 style="margin-bottom: 1.5rem;">Manage Your Resume</h3>
+      <div id="resume-actions" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <!-- Injected via dashboard.js -->
+        <button class="btn btn-primary" onclick="createNewResume()">Create Your First Resume</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

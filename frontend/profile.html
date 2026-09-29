@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body style="background: #F3F4F6;">
+  <nav class="navbar">
+    <div class="nav-brand">ResumeBuilder</div>
+    <div class="nav-links">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/builder.html">Edit Resume</a>
+      <a href="#" id="logout-btn" style="margin-left: 1rem;">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container mt-4" style="max-width: 600px;">
+    <div class="card p-4">
+      <h2 class="mb-4">My Profile</h2>
+      <div id="profile-content">
+        <p>Loading profile...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/profile.js"></script>
+</body>
+</html>

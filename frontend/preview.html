@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Preview</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/builder.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body style="background: #E5E7EB; min-height: 100vh;">
+  <nav class="navbar">
+    <div class="nav-brand">ResumeBuilder</div>
+    <div class="nav-links">
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/builder.html" id="edit-resume-link" class="btn btn-secondary" style="margin-left: 1rem; padding: 0.5rem 1rem;">Edit Resume</a>
+      <button id="download-pdf-btn" class="btn btn-primary" style="margin-left: 1rem; padding: 0.5rem 1rem; cursor: pointer; border: none;">Download PDF</button>
+      <a href="#" id="logout-btn" style="margin-left: 1rem;">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container mt-4" style="display: flex; justify-content: center; padding-bottom: 3rem;">
+    <div id="resume-preview" class="resume-preview-box">
+      <!-- Preview content injected via JS -->
+      <div style="text-align: center; padding: 3rem; color: #6B7280;">Loading resume...</div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/renderer.js"></script>
+  <script src="/js/preview.js"></script>
+</body>
+</html>

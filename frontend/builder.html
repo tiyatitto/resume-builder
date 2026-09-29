@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Builder Form</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/builder.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand">ResumeBuilder</div>
+    <div class="nav-links">
+      <a href="/dashboard.html">Dashboard</a>
+      <button type="button" id="download-pdf-btn" class="btn btn-secondary">Download PDF</button>
+      <button type="button" id="save-btn" class="btn btn-secondary">Save Details</button>
+      <a href="#" id="logout-btn" style="margin-left: 1rem;">Logout</a>
+    </div>
+  </nav>
+
+  <div class="builder-container">
+    <!-- Left Panel: Form -->
+    <div class="builder-form-panel">
+      
+      <!-- Progress / Score -->
+      <div class="card mb-4" style="padding: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 style="margin: 0;">Resume Completion</h3>
+          <span id="completion-score-text" style="font-weight: bold; color: var(--primary-color);">0%</span>
+        </div>
+        <div class="progress-bar-container mt-4 mb-4" style="background: #E5E7EB; height: 8px; border-radius: 4px; overflow: hidden;">
+          <div id="completion-progress" style="background: var(--primary-color); height: 100%; width: 0%; transition: width 0.3s;"></div>
+        </div>
+
+        <!-- ATS Readiness -->
+        <hr style="margin: 1rem 0; border: 0; border-top: 1px solid var(--border-color);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h4 style="margin: 0;">ATS Readiness Score</h4>
+          <span id="ats-score-text" style="font-weight: bold; color: #059669;">0%</span>
+        </div>
+        <ul id="ats-suggestions" style="margin-top: 0.5rem; padding-left: 1.2rem; font-size: 0.85rem; color: #4B5563;">
+          <!-- Suggestions injected by JS -->
+        </ul>
+        
+        <!-- Job Role Recommendations -->
+        <hr style="margin: 1rem 0; border: 0; border-top: 1px solid var(--border-color);">
+        <h4 style="margin: 0 0 0.5rem 0;">Suggested Roles (Based on Skills)</h4>
+        <div id="job-recommendations" style="font-size: 0.85rem; color: #4B5563;">
+          <!-- Recommendations injected by JS -->
+        </div>
+      </div>
+
+      <div id="form-message" class="mb-4 text-center" role="status" aria-live="polite" style="display: none; padding: 0.5rem; border-radius: 4px;"></div>
+
+      <!-- Configuration Section -->
+      <section class="card mb-4 form-section">
+        <h3>Configuration</h3>
+        <div class="grid grid-cols-2 mt-4">
+          <div class="form-group">
+            <label>Template</label>
+            <select id="selectedTemplate" class="form-control" onchange="updatePreview()">
+              <option value="modern-minimal">Modern Minimal</option>
+              <option value="professional">Professional Corporate</option>
+              <option value="student">Student / Graduate</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Target Job Role</label>
+            <input type="text" id="targetJobRole" class="form-control" placeholder="e.g. Software Engineer" oninput="updatePreview()">
+          </div>
+        </div>
+        <input type="hidden" id="layoutMode" value="auto">
+        <input type="hidden" id="themeMode" value="auto">
+        <input type="hidden" id="accentMode" value="auto">
+      </section>
+
+      <section class="card mb-4 form-section customization-section">
+        <div class="section-header"><h3>Layout &amp; Theme</h3><button type="button" id="auto-layout-btn" class="btn btn-secondary btn-sm">Choose Layout Automatically</button></div>
+        <div class="preference-group mt-4">
+          <h4>Layout</h4>
+          <div id="layout-gallery" class="layout-gallery" aria-label="Choose a resume layout"></div>
+          <select id="selectedLayout" class="preference-value" aria-hidden="true" tabindex="-1">
+            <option value="classic-professional">Classic Professional</option>
+            <option value="modern-two-column">Modern Two-Column</option>
+            <option value="sidebar-profile">Sidebar Profile</option>
+            <option value="compact-one-page" selected>Compact One-Page</option>
+            <option value="modern-header">Modern Header</option>
+            <option value="minimalist">Minimalist</option>
+            <option value="timeline">Timeline</option>
+            <option value="executive">Executive</option>
+            <option value="single-column">Single Column</option>
+            <option value="two-column">Two Column</option>
+            <option value="sidebar">Sidebar</option>
+            <option value="compact">Compact</option>
+          </select>
+        </div>
+        <div class="preference-group mt-4">
+          <h4>Theme</h4>
+          <div id="theme-gallery" class="theme-gallery" aria-label="Choose a resume theme"></div>
+          <div class="form-group">
+            <label for="selectedTheme">Theme</label>
+            <select id="selectedTheme" class="form-control">
+              <option value="modern-blue">Modern Blue</option>
+              <option value="classic-black">Classic Black</option>
+              <option value="elegant-gold">Elegant Gold</option>
+              <option value="professional-green">Professional Green</option>
+              <option value="minimal-gray" selected>Minimal Gray</option>
+              <option value="warm-beige">Warm Beige</option>
+              <option value="royal-purple">Royal Purple</option>
+              <option value="burgundy">Burgundy</option>
+              <option value="classic">Classic (legacy)</option>
+              <option value="elegant">Elegant (legacy)</option>
+              <option value="minimal">Minimal (legacy)</option>
+              <option value="warm-neutral">Warm Neutral (legacy)</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 mt-4">
+          <div class="form-group">
+            <label for="accentColor">Accent Color</label>
+            <input type="color" id="accentColor" class="form-control color-control" value="#1F3A5F">
+          </div>
+          <div class="form-group">
+            <label for="selectedFont">Font Combination</label>
+            <select id="selectedFont" class="form-control">
+              <option value="modern">Modern Sans</option>
+              <option value="classic">Classic Serif</option>
+              <option value="humanist">Humanist Sans</option>
+              <option value="editorial">Editorial Serif</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Personal Info -->
+      <section class="card mb-4 form-section">
+        <h3>Personal Information</h3>
+        <div class="grid grid-cols-2 mt-4">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="fullName" class="form-control" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Professional Title</label>
+            <input type="text" id="professionalTitle" class="form-control" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" class="form-control" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" id="phone" class="form-control" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="location" class="form-control" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label for="profile-photo-file">Profile Photo</label>
+            <div class="photo-controls">
+              <img id="profile-photo-preview" class="profile-photo-preview" alt="Profile photo preview" hidden>
+              <input type="file" id="profile-photo-file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden>
+              <button type="button" id="upload-photo-btn" class="btn btn-secondary btn-sm">Upload Profile Photo</button>
+              <button type="button" id="remove-photo-btn" class="btn btn-secondary btn-sm" hidden>Remove Photo</button>
+            </div>
+            <input type="url" id="profile-photo-url" class="form-control photo-url-fallback" placeholder="Or paste an image URL" aria-label="Profile photo URL" oninput="updatePhotoUrl()">
+            <input type="hidden" id="profilePhoto">
+          </div>
+          <div class="form-group">
+            <label>LinkedIn</label>
+            <input type="text" id="linkedin" class="form-control" oninput="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>GitHub</label>
+            <input type="text" id="github" class="form-control" oninput="updatePreview()">
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <label>Portfolio Link</label>
+            <input type="text" id="portfolio" class="form-control" oninput="updatePreview()">
+          </div>
+        </div>
+      </section>
+
+      <!-- Summary -->
+      <section class="card mb-4 form-section">
+        <h3>Professional Summary</h3>
+        <div class="form-group mt-4">
+          <textarea id="summary" class="form-control" rows="4" placeholder="A brief summary of your professional background and goals..." oninput="updatePreview()"></textarea>
+        </div>
+      </section>
+
+      <!-- Education -->
+      <section class="card mb-4 form-section">
+        <div class="section-header">
+          <h3>Education</h3>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicEntry('education')">+ Add</button>
+        </div>
+        <div id="education-container"></div>
+      </section>
+
+      <!-- Experience -->
+      <section class="card mb-4 form-section">
+        <div class="section-header">
+          <h3>Work Experience</h3>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicEntry('experience')">+ Add</button>
+        </div>
+        <div id="experience-container"></div>
+      </section>
+
+      <!-- Skills -->
+      <section class="card mb-4 form-section">
+        <div class="section-header">
+          <h3>Skills</h3>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicEntry('skills')">+ Add</button>
+        </div>
+        <div id="skills-container" class="grid grid-cols-2 mt-4"></div>
+      </section>
+
+      <!-- Projects -->
+      <section class="card mb-4 form-section">
+        <div class="section-header">
+          <h3>Projects</h3>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicEntry('projects')">+ Add</button>
+        </div>
+        <div id="projects-container"></div>
+      </section>
+
+      <!-- Certifications -->
+      <section class="card mb-4 form-section">
+        <div class="section-header">
+          <h3>Certifications</h3>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicEntry('certifications')">+ Add</button>
+        </div>
+        <div id="certifications-container"></div>
+      </section>
+
+      <!-- Achievements -->
+      <section class="card mb-4 form-section">
+        <div class="section-header">
+          <h3>Achievements</h3>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicEntry('achievements')">+ Add</button>
+        </div>
+        <div id="achievements-container" class="mt-4"></div>
+      </section>
+
+      <!-- Languages -->
+      <section class="card mb-4 form-section">
+        <div class="section-header">
+          <h3>Languages</h3>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="addDynamicEntry('languages')">+ Add</button>
+        </div>
+        <div id="languages-container" class="grid grid-cols-2 mt-4"></div>
+      </section>
+
+      <div class="builder-submit-actions">
+        <button type="button" id="submit-resume-btn" class="btn btn-primary">Submit Resume</button>
+      </div>
+
+    </div>
+
+    <!-- Right Panel: Preview -->
+    <div class="builder-preview-panel">
+      <div id="resume-preview" class="resume-preview-box template-modern-minimal">
+        <!-- Preview content injected via JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/renderer.js"></script>
+  <script src="/js/builder.js"></script>
+</body>
+</html>
